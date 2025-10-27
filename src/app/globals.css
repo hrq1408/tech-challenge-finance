@@ -15,8 +15,16 @@ body {
 
   --color-background: #DEE9EA;
   --color-light: #F8F8F8;
+  --color-surface: #F5F5F5;
+  --color-surface-gray: #606A70;
+  --color-error: #D32F2F;
+  --color-success: #388E3C;
+  --color-warning: #FBC02D;
+  --color-border: #E0E0E0;
+  --color-text: #000000;
+  --color-disabled: #BBBBBB;
 
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
+  --font-regular: 'Montserrat', Arial, sans-serif;
+  --font-medium: 'Montserrat', Arial, sans-serif;
+  --font-bold: 'Montserrat', Arial, sans-serif;
 }
