@@ -2,25 +2,49 @@
 
 import { Card } from "@/layout/card";
 import { useAccountStore } from "@/store/accountStore";
+import Link from "next/link";
 
 export default function Home() {
-  // Usamos o hook para acessar o estado global
-  const { balance } = useAccountStore();
+  const { balance, transactions } = useAccountStore();
 
-  // Formatamos o saldo para a moeda local (Real)
   const formattedBalance = new Intl.NumberFormat('pt-BR', {
     style: 'currency',
     currency: 'BRL',
   }).format(balance);
 
   return (
-    <Card className="w-2/3 mx-auto mt-5 bg-primary text-white">
-      <div className=" flex justify-between items-center h-20">
-        <h1 className="text-2xl">Bem Vindo, João!</h1>
-        <div>
-          <p className="text-2xl">Saldo: {formattedBalance}</p>
+    <main className="w-2/3 mx-auto mt-5">
+      <Card className="bg-primary text-white">
+        <div className=" flex justify-between items-center h-20">
+          <h1 className="text-2xl">Bem Vindo, João!</h1>
+          <div>
+            <p className="text-2xl">Saldo: {formattedBalance}</p>
+          </div>
         </div>
-      </div>
-    </Card>
+      </Card>
+
+      <Card className="mt-5">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-bold text-gray-700">Últimas Transações</h2>
+          <Link href="/transactions" className="text-primary font-medium hover:underline">
+            Ver todas
+          </Link>
+        </div>
+        <ul>
+          {transactions.map((transaction) => (
+            <li key={transaction.id} className="flex justify-between items-center py-3 border-b last:border-b-0">
+              <span className="text-gray-600">{transaction.description}</span>
+              <span className={`${transaction.type === 'income' ? 'text-green-600' : 'text-red-600'} font-medium`}>
+                {transaction.type === 'expense' && '- '}
+                {new Intl.NumberFormat('pt-BR', {
+                  style: 'currency',
+                  currency: 'BRL',
+                }).format(transaction.amount)}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </Card>
+    </main>
   );
 }
