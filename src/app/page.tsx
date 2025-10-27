@@ -1,11 +1,16 @@
 'use client';
 
+import { useState } from "react";
 import { Card } from "@/layout/card";
 import { useAccountStore } from "@/store/accountStore";
 import Link from "next/link";
+import { Modal } from "@/components/modal";
+import { TransactionForm } from "@/components/transaction-form";
+import { Button } from "@/components/button";
 
 export default function Home() {
   const { balance, transactions } = useAccountStore();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const formattedBalance = new Intl.NumberFormat('pt-BR', {
     style: 'currency',
@@ -15,7 +20,7 @@ export default function Home() {
   return (
     <main className="w-2/3 mx-auto mt-5">
       <Card className="bg-primary text-white">
-        <div className=" flex justify-between items-center h-20">
+        <div className="flex justify-between items-center h-20">
           <h1 className="text-2xl">Bem Vindo, João!</h1>
           <div>
             <p className="text-2xl">Saldo: {formattedBalance}</p>
@@ -25,10 +30,15 @@ export default function Home() {
 
       <Card className="mt-5">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold text-gray-700">Últimas Transações</h2>
-          <Link href="/transactions" className="text-primary font-medium hover:underline">
-            Ver todas
-          </Link>
+          <div>
+            <h2 className="text-xl font-bold text-gray-700">Últimas Transações</h2>
+            <Link href="/transactions" className="text-primary font-medium hover:underline text-sm">
+              Ver todas
+            </Link>
+          </div>
+          <Button onClick={() => setIsModalOpen(true)}>
+            Nova Transação
+          </Button>
         </div>
         <ul>
           {transactions.map((transaction) => (
@@ -45,6 +55,11 @@ export default function Home() {
           ))}
         </ul>
       </Card>
+
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <h2 className="text-xl font-bold text-gray-700 mb-4">Adicionar Nova Transação</h2>
+        <TransactionForm onSuccess={() => setIsModalOpen(false)} />
+      </Modal>
     </main>
   );
 }
