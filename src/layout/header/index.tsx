@@ -5,7 +5,7 @@ export function Header() {
     <header className="flex px-20 py-4 bg-primary text-white">
         <div className="flex items-center justify-between w-full mx-auto max-w-7x1">
             <div>
-               Bem vindo João!
+               Tech Challenge Finance
             </div>
             <nav>
                 <ul className="flex gap-2 items-center justify-center">
