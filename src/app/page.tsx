@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Card } from "@/layout/card";
-import { useAccountStore } from "@/store/accountStore";
+import { Transaction, useAccountStore } from "@/store/accountStore";
 import Link from "next/link";
 import { Modal } from "@/components/modal";
 import { TransactionForm } from "@/components/transaction-form";
@@ -11,6 +11,12 @@ import { Button } from "@/components/button";
 export default function Home() {
   const { balance, transactions } = useAccountStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
+
+  const handleEdit = (transaction: Transaction) => {
+    setEditingTransaction(transaction);
+    setIsModalOpen(true);
+  };
 
   const formattedBalance = new Intl.NumberFormat('pt-BR', {
     style: 'currency',
@@ -42,23 +48,38 @@ export default function Home() {
         </div>
         <ul>
           {transactions.map((transaction) => (
-            <li key={transaction.id} className="flex justify-between items-center py-3 border-b last:border-b-0">
-              <span className="text-gray-600">{transaction.description}</span>
-              <span className={`${transaction.type === 'income' ? 'text-green-600' : 'text-red-600'} font-medium`}>
-                {transaction.type === 'expense' && '- '}
-                {new Intl.NumberFormat('pt-BR', {
-                  style: 'currency',
-                  currency: 'BRL',
-                }).format(transaction.amount)}
-              </span>
+            <li key={transaction.id} className="flex justify-between items-center py-3 border-b last:border-b-0 gap-4">
+              <div className="flex-1">
+                <span className="text-gray-600">{transaction.description}</span>
+              </div>
+              <div className="flex items-center gap-4">
+                <span className={`${transaction.type === 'income' ? 'text-green-600' : 'text-red-600'} font-medium w-32 text-right`}>
+                  {transaction.type === 'expense' && '- '}
+                  {new Intl.NumberFormat('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL',
+                  }).format(transaction.amount)}
+                </span>
+                <Button variant="outline" onClick={() => handleEdit(transaction)}>
+                  Editar
+                </Button>
+              </div>
             </li>
           ))}
         </ul>
       </Card>
 
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <h2 className="text-xl font-bold text-gray-700 mb-4">Adicionar Nova Transação</h2>
-        <TransactionForm onSuccess={() => setIsModalOpen(false)} />
+      <Modal isOpen={isModalOpen} onClose={() => {
+        setIsModalOpen(false);
+        setEditingTransaction(null);
+      }}>
+        <h2 className="text-xl font-bold text-gray-700 mb-4">
+          {editingTransaction ? 'Editar Transação' : 'Adicionar Nova Transação'}
+        </h2>
+        <TransactionForm onSuccess={() => {
+          setIsModalOpen(false);
+          setEditingTransaction(null);
+        }} transactionToEdit={editingTransaction} />
       </Modal>
     </main>
   );

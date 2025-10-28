@@ -1,36 +1,56 @@
 'use client';
 
-import { useState } from "react";
-import { useAccountStore } from "@/store/accountStore";
+import { useState, useEffect } from "react";
+import { useAccountStore, Transaction } from "@/store/accountStore";
 import { Button } from "./button";
 
 interface TransactionFormProps {
     onSuccess: () => void;
+    transactionToEdit?: Transaction | null;
 }
 
-export function TransactionForm({ onSuccess }: TransactionFormProps) {
-    const { addTransaction } = useAccountStore();
+export function TransactionForm({ onSuccess, transactionToEdit }: TransactionFormProps) {
+    const { addTransaction, editTransaction } = useAccountStore();
     const [description, setDescription] = useState('');
     const [amount, setAmount] = useState('');
     const [type, setType] = useState<'income' | 'expense'>('expense');
+
+    useEffect(() => {
+        if (transactionToEdit) {
+            setDescription(transactionToEdit.description);
+            setAmount(transactionToEdit.amount.toString());
+            setType(transactionToEdit.type);
+        } else {
+            setDescription('');
+            setAmount('');
+            setType('expense');
+        }
+    }, [transactionToEdit]);
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         const numericAmount = parseFloat(amount);
         if (!description || isNaN(numericAmount) || numericAmount <= 0) {
-            alert('Por favor, preencha todos os campos corretamente.');
+            alert('Por favor, preencha todos os campos corretamente.'); 
             return;
         }
 
-        const newId = Date.now().toString(); 
-
-        addTransaction({
-            id: newId,
-            description,
-            amount: numericAmount,
-            type,
-        });
+        if (transactionToEdit) {
+            editTransaction({
+                ...transactionToEdit,
+                description,
+                amount: numericAmount,
+                type,
+            });
+        } else {
+            addTransaction({
+                id: Date.now().toString(), 
+                description,
+                amount: numericAmount,
+                type,
+            });
+        }
 
         onSuccess(); 
     };
@@ -72,7 +92,9 @@ export function TransactionForm({ onSuccess }: TransactionFormProps) {
                     <span className="ml-2 text-sm text-gray-700">Receita</span>
                 </label>
             </div>
-            <Button type="submit" className="w-full">Adicionar</Button>
+            <Button type="submit" className="w-full">
+                {transactionToEdit ? 'Salvar Alterações' : 'Adicionar'}
+            </Button>
         </form>
     );
 }
