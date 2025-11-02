@@ -45,6 +45,10 @@ export default function Home() {
     currency: 'BRL',
   }).format(balance);
 
+  const recentTransactions = [...transactions]
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .slice(0, 3);
+
   return (
     <main className="w-2/3 mx-auto mt-5">
       <Card className="bg-primary text-white">
@@ -69,12 +73,9 @@ export default function Home() {
           </Button>
         </div>
         <ul>
-          {transactions.map((transaction) => (
+          {recentTransactions.map((transaction) => (
             <li key={transaction.id} className="flex justify-between items-center py-3 border-b last:border-b-0 gap-4">
               <div className="flex-1">
-                <span className="text-sm text-gray-500">
-                  {new Intl.DateTimeFormat('pt-BR').format(new Date(transaction.date))}
-                </span>
                 <span className="text-gray-600">{transaction.description}</span>
               </div>
               <div className="flex items-center gap-4">
