@@ -49,6 +49,7 @@ export function TransactionForm({ onSuccess, transactionToEdit }: TransactionFor
                 description,
                 amount: numericAmount,
                 type,
+                date: new Date(),
             });
         }
 

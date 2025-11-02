@@ -5,6 +5,7 @@ export interface Transaction {
   description: string;
   amount: number;
   type: "income" | "expense";
+  date: Date;
 }
 
 interface AccountState {
@@ -16,8 +17,8 @@ interface AccountState {
 }
 
 const initialTransactions: Transaction[] = [
-  { id: '1', description: "Salário", amount: 1500, type: "income" },
-  { id: '2', description: "Aluguel", amount: 500, type: "expense" },
+  { id: '1', description: "Salário", amount: 1500, type: "income", date:  new Date('2025-10-05T00:10:00') },
+  { id: '2', description: "Aluguel", amount: 500, type: "expense", date: new Date('2025-10-10T00:10:00') },
 ];
 
 const calculateBalance = (transactions: Transaction[]) => {
@@ -54,10 +55,12 @@ export const useAccountStore = create<AccountState>((set) => ({
 
   editTransaction: (updatedTransaction) =>
     set((state) => {
+      const newTransactions = state.transactions.map((t) =>
+        t.id === updatedTransaction.id ? updatedTransaction : t
+      );
       return {
-        transactions: state.transactions.map((t) =>
-          t.id === updatedTransaction.id ? updatedTransaction : t
-        ),
+        transactions: newTransactions,
+        balance: calculateBalance(newTransactions),
       };
     }),
 }));
