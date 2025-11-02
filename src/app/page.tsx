@@ -14,10 +14,17 @@ export default function Home() {
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [transactionToRemove, setTransactionToRemove] = useState<string | null>(null);
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
+  const [viewingTransaction, setViewingTransaction] = useState<Transaction | null>(null);
 
   const handleEdit = (transaction: Transaction) => {
     setEditingTransaction(transaction);
     setIsModalOpen(true);
+  };
+
+  const handleViewDetails = (transaction: Transaction) => {
+    setViewingTransaction(transaction);
+    setIsDetailsModalOpen(true);
   };
 
   const handleRemove = (transactionId: string) => {
@@ -65,6 +72,9 @@ export default function Home() {
           {transactions.map((transaction) => (
             <li key={transaction.id} className="flex justify-between items-center py-3 border-b last:border-b-0 gap-4">
               <div className="flex-1">
+                <span className="text-sm text-gray-500">
+                  {new Intl.DateTimeFormat('pt-BR').format(new Date(transaction.date))}
+                </span>
                 <span className="text-gray-600">{transaction.description}</span>
               </div>
               <div className="flex items-center gap-4">
@@ -75,6 +85,9 @@ export default function Home() {
                     currency: 'BRL',
                   }).format(transaction.amount)}
                 </span>
+                <Button variant="outline" onClick={() => handleViewDetails(transaction)}>
+                  Detalhes
+                </Button>
                 <Button variant="outline" onClick={() => handleEdit(transaction)}>
                   Editar
                 </Button>
@@ -111,6 +124,29 @@ export default function Home() {
             Confirmar
           </Button>
         </div>
+      </Modal>
+
+      <Modal isOpen={isDetailsModalOpen} onClose={() => setIsDetailsModalOpen(false)}>
+        {viewingTransaction && (
+          <div>
+            <h2 className="text-2xl font-bold text-gray-800 mb-6 border-b pb-4">Detalhes da Transação</h2>
+            <div className="space-y-3 text-gray-700">
+              <p><strong>Descrição:</strong> {viewingTransaction.description}</p>
+              <p><strong>Valor:</strong>
+                <span className={`font-semibold ${viewingTransaction.type === 'income' ? 'text-green-600' : 'text-red-600'}`}>
+                  {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(viewingTransaction.amount)}
+                </span>
+              </p>
+              <p><strong>Tipo:</strong> {viewingTransaction.type === 'income' ? 'Receita' : 'Despesa'}</p>
+              <p><strong>Data:</strong> {new Intl.DateTimeFormat('pt-BR', { dateStyle: 'long' }).format(new Date(viewingTransaction.date))}</p>
+            </div>
+            <div className="flex justify-end mt-8">
+              <Button onClick={() => setIsDetailsModalOpen(false)}>
+                Fechar
+              </Button>
+            </div>
+          </div>
+        )}
       </Modal>
     </main>
   );
