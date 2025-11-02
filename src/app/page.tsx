@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Card } from "@/layout/card";
 import { Transaction, useAccountStore } from "@/store/accountStore";
 import Link from "next/link";
-import { Modal } from "@/components/modal";
+import { Modal } from "@/layout/modal";
 import { TransactionForm } from "@/app/_transaction-form";
 import { Button } from "@/components/button";
 
