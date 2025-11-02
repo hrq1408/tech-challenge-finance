@@ -5,17 +5,32 @@ import { Card } from "@/layout/card";
 import { Transaction, useAccountStore } from "@/store/accountStore";
 import Link from "next/link";
 import { Modal } from "@/components/modal";
-import { TransactionForm } from "@/components/transaction-form";
+import { TransactionForm } from "@/app/_transaction-form";
 import { Button } from "@/components/button";
 
 export default function Home() {
-  const { balance, transactions } = useAccountStore();
+  const { balance, transactions, removeTransaction } = useAccountStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [transactionToRemove, setTransactionToRemove] = useState<string | null>(null);
 
   const handleEdit = (transaction: Transaction) => {
     setEditingTransaction(transaction);
     setIsModalOpen(true);
+  };
+
+  const handleRemove = (transactionId: string) => {
+    setTransactionToRemove(transactionId);
+    setIsConfirmModalOpen(true);
+  };
+
+  const confirmRemove = () => {
+    if (transactionToRemove) {
+      removeTransaction(transactionToRemove);
+      setTransactionToRemove(null);
+      setIsConfirmModalOpen(false);
+    }
   };
 
   const formattedBalance = new Intl.NumberFormat('pt-BR', {
@@ -63,6 +78,9 @@ export default function Home() {
                 <Button variant="outline" onClick={() => handleEdit(transaction)}>
                   Editar
                 </Button>
+                <Button variant="error" onClick={() => handleRemove(transaction.id)}>
+                  Remover
+                </Button>
               </div>
             </li>
           ))}
@@ -80,6 +98,19 @@ export default function Home() {
           setIsModalOpen(false);
           setEditingTransaction(null);
         }} transactionToEdit={editingTransaction} />
+      </Modal>
+
+      <Modal isOpen={isConfirmModalOpen} onClose={() => setIsConfirmModalOpen(false)}>
+        <h2 className="text-xl font-bold text-gray-700 mb-4">Confirmar Remoção</h2>
+        <p className="text-gray-600 mb-6">Tem certeza que deseja remover esta transação?</p>
+        <div className="flex justify-end gap-4">
+          <Button variant="outline" onClick={() => setIsConfirmModalOpen(false)}>
+            Cancelar
+          </Button>
+          <Button variant="error" onClick={confirmRemove}>
+            Confirmar
+          </Button>
+        </div>
       </Modal>
     </main>
   );
