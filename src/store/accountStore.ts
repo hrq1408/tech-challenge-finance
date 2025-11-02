@@ -34,13 +34,13 @@ export const useAccountStore = create<AccountState>((set) => ({
   transactions: initialTransactions,
 
   addTransaction: (transaction: Transaction) =>
-    set((state) => ({
-      transactions: [...state.transactions, transaction],
-      balance:
-        transaction.type === "income"
-          ? state.balance + transaction.amount
-          : state.balance - transaction.amount,
-    })),
+    set((state) => {
+      const newTransactions = [...state.transactions, transaction];
+      return {
+        transactions: newTransactions,
+        balance: calculateBalance(newTransactions),
+      };
+    }),
 
   removeTransaction: (id: string) =>
     set((state) => {
