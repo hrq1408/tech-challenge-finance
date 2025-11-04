@@ -5,8 +5,8 @@ import { Card } from "@/layout/card";
 import { useAccountStore, Transaction } from "@/store/accountStore";
 import Link from "next/link";
 import { Button } from "@/components/button";
-import { Modal } from "@/components/modal";
-import { TransactionForm } from "@/components/transaction-form";
+import { Modal } from "@/layout/modal";
+import { TransactionForm } from "@/app/_transaction-form";
 
 export default function Transactions() {
   const { transactions, removeTransaction } = useAccountStore();
@@ -190,5 +190,6 @@ export default function Transactions() {
     </main>
   );
 }
+
 
 

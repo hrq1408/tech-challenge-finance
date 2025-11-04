@@ -1,8 +1,10 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Tech Challenge Finance
 
-## Getting Started
+Aplicação de gerenciamento financeiro desenvolvida com Next.js e Design System.
 
-First, run the development server:
+## 🚀 Como Executar
+
+### Desenvolvimento
 
 ```bash
 npm run dev
@@ -12,25 +14,94 @@ yarn dev
 pnpm dev
 # or
 bun dev
+A aplicação estará disponível em [http://localhost:3000](http://localhost:3000)
+
+##  Documentação de Componentes (Storybook)
+
+Este projeto usa o **Storybook** para documentar e visualizar os componentes do Design System.
+
+### Iniciar o Storybook
+
+```bash
+npm run storybook
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+O Storybook estará disponível em [http://localhost:6006](http://localhost:6006)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Build do Storybook
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Para gerar uma versão estática do Storybook:
 
-## Learn More
+```bash
+npm run build-storybook
+```
 
-To learn more about Next.js, take a look at the following resources:
+A versão estática será gerada na pasta `storybook-static/`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Componentes Documentados
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Components**
+  - `Button` - Botão com variantes (primary, secondary, outline)
+  - `Modal` - Modal para exibir conteúdo em overlay
+  
+- **Layout**
+  - `Card` - Card para agrupar conteúdo
+  - `Header` - Cabeçalho da aplicação
 
-## Deploy on Vercel
+### Criando Novas Stories
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Para documentar um novo componente, crie um arquivo `ComponentName.stories.tsx` na mesma pasta do componente. Veja exemplos em:
+- `src/components/button/Button.stories.tsx`
+- `src/components/modal/Modal.stories.tsx`
+- `src/layout/card/Card.stories.tsx`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+##  Tecnologias
+
+- **Next.js 15.5.6** - Framework React
+- **TypeScript** - Tipagem estática
+- **Tailwind CSS v4** - Estilização
+- **Zustand** - Gerenciamento de estado
+- **Storybook** - Documentação de componentes
+
+##  Estrutura do Projeto
+
+```
+src/
+├── app/              # Páginas e rotas (App Router)
+│   ├── page.tsx      # Home page
+│   └── transactions/ # Página de listagem de transações
+├── components/        # Componentes reutilizáveis
+│   ├── button/
+│   ├── modal/
+│   └── transaction-form.tsx
+├── layout/           # Componentes de layout
+│   ├── card/
+│   └── header/
+└── store/            # Estado global (Zustand)
+    └── accountStore.ts
+```
+
+##  Funcionalidades
+
+-  Visualização de saldo da conta
+-  Listagem de transações
+-  Adicionar nova transação
+-  Editar transação existente
+-  Excluir transação
+-  Visualizar detalhes da transação
+-  Design System documentado no Storybook
+
+##  Scripts Disponíveis
+
+- `npm run dev` - Inicia servidor de desenvolvimento
+- `npm run build` - Build de produção
+- `npm start` - Inicia servidor de produção
+- `npm run storybook` - Inicia Storybook
+- `npm run build-storybook` - Build estático do Storybook
+- `npm run lint` - Executa ESLint
+
+##  Mais Informações
+
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Storybook Documentation](https://storybook.js.org/docs)
