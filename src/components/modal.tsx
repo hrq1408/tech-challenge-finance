@@ -15,13 +15,13 @@ export function Modal({ isOpen, onClose, children }: ModalProps) {
 
   return (
     <div
-      className="fixed inset-0 bg-black/50  z-50 flex justify-center items-center"
+      className="fixed inset-0 bg-black/50 z-50 flex justify-center items-center"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
     >
       <div
-        className="bg-white p-6 rounded-lg shadow-xl w-full max-w-md"
+        className="bg-white p-6 rounded-lg shadow-xl w-full max-w-md relative"
         onClick={(e) => e.stopPropagation()}
         role="document"
       >
