@@ -5,6 +5,7 @@ export interface Transaction {
   description: string;
   amount: number;
   type: "income" | "expense";
+  date: Date;
 }
 
 interface AccountState {
@@ -16,8 +17,8 @@ interface AccountState {
 }
 
 const initialTransactions: Transaction[] = [
-  { id: '1', description: "Salário", amount: 1500, type: "income" },
-  { id: '2', description: "Aluguel", amount: 500, type: "expense" },
+  { id: '1', description: "Salário", amount: 1500, type: "income", date:  new Date('2025-10-05T00:10:00') },
+  { id: '2', description: "Aluguel", amount: 500, type: "expense", date: new Date('2025-10-10T00:10:00') },
 ];
 
 const calculateBalance = (transactions: Transaction[]) => {
@@ -33,13 +34,13 @@ export const useAccountStore = create<AccountState>((set) => ({
   transactions: initialTransactions,
 
   addTransaction: (transaction: Transaction) =>
-    set((state) => ({
-      transactions: [...state.transactions, transaction],
-      balance:
-        transaction.type === "income"
-          ? state.balance + transaction.amount
-          : state.balance - transaction.amount,
-    })),
+    set((state) => {
+      const newTransactions = [...state.transactions, transaction];
+      return {
+        transactions: newTransactions,
+        balance: calculateBalance(newTransactions),
+      };
+    }),
 
   removeTransaction: (id: string) =>
     set((state) => {
@@ -63,26 +64,12 @@ export const useAccountStore = create<AccountState>((set) => ({
 
   editTransaction: (updatedTransaction) =>
     set((state) => {
-      const oldTransaction = state.transactions.find(
-        (t) => t.id === updatedTransaction.id
+      const newTransactions = state.transactions.map((t) =>
+        t.id === updatedTransaction.id ? updatedTransaction : t
       );
-      if (!oldTransaction) return state; 
-
-      let newBalance = state.balance;
-      newBalance =
-        oldTransaction.type === "income"
-          ? newBalance - oldTransaction.amount
-          : newBalance + oldTransaction.amount;
-      newBalance =
-        updatedTransaction.type === "income"
-          ? newBalance + updatedTransaction.amount
-          : newBalance - updatedTransaction.amount;
-
       return {
-        transactions: state.transactions.map((t) =>
-          t.id === updatedTransaction.id ? updatedTransaction : t
-        ),
-        balance: newBalance,
+        transactions: newTransactions,
+        balance: calculateBalance(newTransactions),
       };
     }),
 }));

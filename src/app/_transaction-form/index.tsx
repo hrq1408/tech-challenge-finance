@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useAccountStore, Transaction } from "@/store/accountStore";
-import { Button } from "./button";
+import { Button } from "@/components/button";
 
 interface TransactionFormProps {
     onSuccess: () => void;
@@ -49,6 +49,7 @@ export function TransactionForm({ onSuccess, transactionToEdit }: TransactionFor
                 description,
                 amount: numericAmount,
                 type,
+                date: new Date(),
             });
         }
 

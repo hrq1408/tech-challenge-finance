@@ -1,7 +1,8 @@
 import { ButtonHTMLAttributes } from "react";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "primary" | "secondary" | "outline";
+  variant?: "primary" | "secondary" | "outline" | "error";
+  className?: string
 }
 
 export function Button({ variant = "primary", className = "", ...props }: ButtonProps) {
@@ -14,6 +15,8 @@ export function Button({ variant = "primary", className = "", ...props }: Button
     variantClasses = "bg-secondary text-white hover:bg-secondary-light";
   } else if (variant === "outline") {
     variantClasses = "border-2 border-primary text-primary hover:bg-primary hover:text-white";
+  } else if (variant === "error") {
+    variantClasses = "border-2 border-error  hover:bg-error text-error hover:text-white";
   }
 
   return (
